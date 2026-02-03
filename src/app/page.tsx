@@ -12,10 +12,7 @@ import {
   DateRange,
 } from "@/components";
 import Image from "next/image";
-
-const N8N_WEBHOOK_URL =
-  process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL ||
-  "http://localhost:5678/webhook/monitor-prensa";
+import noticiasData from "@/data/noticias.json";
 
 const HISTORY_DAYS = 30;
 
@@ -151,39 +148,27 @@ export default function Home() {
     setError(null);
 
     try {
-      const response = await fetch(N8N_WEBHOOK_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ jugadores: [selectedPlayer.name] }),
-      });
+      // Load from static JSON data
+      const playerNews = (noticiasData.byPlayer as Record<string, Mencion[]>)[selectedPlayer.name] || [];
 
-      if (!response.ok) {
-        throw new Error(`Error ${response.status}: ${response.statusText}`);
-      }
+      // Simulate network delay for UX
+      await new Promise(resolve => setTimeout(resolve, 500));
 
-      const data = await response.json();
+      setNoticias(playerNews);
 
-      if (data.error) {
-        setError(data.error);
-        setNoticias([]);
-      } else {
-        const menciones: Mencion[] = data.menciones || [];
-        setNoticias(menciones);
-
-        if (menciones.length > 0) {
-          const summary = {
-            total: menciones.length,
-            positivas: menciones.filter((m) => m.sentimiento?.tipo === "positivo").length,
-            negativas: menciones.filter((m) => m.sentimiento?.tipo === "negativo").length,
-            neutrales: menciones.filter(
-              (m) => !m.sentimiento?.tipo || m.sentimiento?.tipo === "neutral"
-            ).length,
-          };
-          saveToHistory(selectedPlayer.id, summary);
-        }
+      if (playerNews.length > 0) {
+        const summary = {
+          total: playerNews.length,
+          positivas: playerNews.filter((m) => m.sentimiento?.tipo === "positivo").length,
+          negativas: playerNews.filter((m) => m.sentimiento?.tipo === "negativo").length,
+          neutrales: playerNews.filter(
+            (m) => !m.sentimiento?.tipo || m.sentimiento?.tipo === "neutral"
+          ).length,
+        };
+        saveToHistory(selectedPlayer.id, summary);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Error de conexión");
+      setError(err instanceof Error ? err.message : "Error cargando datos");
       setNoticias([]);
     } finally {
       setLoading(false);
