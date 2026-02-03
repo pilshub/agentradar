@@ -10,15 +10,15 @@ interface HistoryAnalyticsProps {
 export function HistoryAnalytics({ history, playerName }: HistoryAnalyticsProps) {
   if (history.length === 0) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+      <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
+        <h3 className="text-lg font-semibold text-white mb-4">
           Análisis Histórico
         </h3>
         <div className="text-center py-8">
-          <p className="text-gray-500 dark:text-gray-400">
+          <p className="text-gray-400">
             Sin datos históricos para {playerName}
           </p>
-          <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
+          <p className="text-sm text-gray-500 mt-1">
             Busca noticias para generar el histórico
           </p>
         </div>
@@ -26,7 +26,6 @@ export function HistoryAnalytics({ history, playerName }: HistoryAnalyticsProps)
     );
   }
 
-  // Calcular estadísticas
   const totalMenciones = history.reduce((sum, h) => sum + h.menciones, 0);
   const totalPositivas = history.reduce((sum, h) => sum + h.positivas, 0);
   const totalNegativas = history.reduce((sum, h) => sum + h.negativas, 0);
@@ -37,7 +36,6 @@ export function HistoryAnalytics({ history, playerName }: HistoryAnalyticsProps)
     ? ((totalPositivas - totalNegativas) / totalMenciones * 100).toFixed(1)
     : "0";
 
-  // Tendencia (comparar primera mitad con segunda mitad)
   const mitad = Math.floor(history.length / 2);
   const primeraMitad = history.slice(0, mitad);
   const segundaMitad = history.slice(mitad);
@@ -55,10 +53,8 @@ export function HistoryAnalytics({ history, playerName }: HistoryAnalyticsProps)
       ? "down"
       : "stable";
 
-  // Día con más menciones
   const maxDay = history.reduce((max, h) => h.menciones > max.menciones ? h : max, history[0]);
 
-  // Día con mejor sentimiento
   const bestSentimentDay = history.reduce((best, h) => {
     const bestScore = best.menciones > 0 ? (best.positivas - best.negativas) / best.menciones : 0;
     const currentScore = h.menciones > 0 ? (h.positivas - h.negativas) / h.menciones : 0;
@@ -71,12 +67,15 @@ export function HistoryAnalytics({ history, playerName }: HistoryAnalyticsProps)
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+    <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+        <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+          <svg className="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
           Análisis Histórico
         </h3>
-        <span className="text-sm text-gray-500 dark:text-gray-400">
+        <span className="text-sm text-gray-400">
           Últimos {history.length} días
         </span>
       </div>
@@ -109,9 +108,9 @@ export function HistoryAnalytics({ history, playerName }: HistoryAnalyticsProps)
         />
       </div>
 
-      {/* Gráfico de barras mejorado */}
+      {/* Gráfico de barras */}
       <div className="mb-6">
-        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+        <h4 className="text-sm font-medium text-gray-300 mb-3">
           Evolución de menciones
         </h4>
         <div className="h-40 flex items-end gap-1">
@@ -126,20 +125,18 @@ export function HistoryAnalytics({ history, playerName }: HistoryAnalyticsProps)
               >
                 {/* Tooltip */}
                 <div className="opacity-0 group-hover:opacity-100 transition-opacity mb-1 text-xs text-center">
-                  <span className="bg-gray-900 text-white px-2 py-1 rounded text-xs whitespace-nowrap">
+                  <span className="bg-white text-gray-900 px-2 py-1 rounded text-xs whitespace-nowrap shadow-lg">
                     {entry.menciones} ({entry.positivas}+ / {entry.negativas}-)
                   </span>
                 </div>
 
                 {/* Barra */}
                 <div
-                  className="w-full rounded-t transition-all duration-300 relative overflow-hidden"
+                  className="w-full rounded-t transition-all duration-300 relative overflow-hidden cursor-pointer hover:opacity-80"
                   style={{ height: `${Math.max(heightPercent, 4)}%` }}
                 >
-                  {/* Base gris */}
-                  <div className="absolute inset-0 bg-gray-300 dark:bg-gray-600" />
+                  <div className="absolute inset-0 bg-gray-600" />
 
-                  {/* Positivas (verde desde abajo) */}
                   {entry.menciones > 0 && (
                     <div
                       className="absolute bottom-0 left-0 right-0 bg-green-500"
@@ -147,7 +144,6 @@ export function HistoryAnalytics({ history, playerName }: HistoryAnalyticsProps)
                     />
                   )}
 
-                  {/* Negativas (rojo desde arriba) */}
                   {entry.menciones > 0 && (
                     <div
                       className="absolute top-0 left-0 right-0 bg-red-500"
@@ -157,7 +153,7 @@ export function HistoryAnalytics({ history, playerName }: HistoryAnalyticsProps)
                 </div>
 
                 {/* Label */}
-                <span className="text-xs text-gray-500 dark:text-gray-400 mt-1 transform -rotate-45 origin-top-left">
+                <span className="text-xs text-gray-500 mt-1 transform -rotate-45 origin-top-left whitespace-nowrap">
                   {formatDate(entry.fecha)}
                 </span>
               </div>
@@ -167,7 +163,7 @@ export function HistoryAnalytics({ history, playerName }: HistoryAnalyticsProps)
       </div>
 
       {/* Desglose por sentimiento */}
-      <div className="grid grid-cols-3 gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+      <div className="grid grid-cols-3 gap-4 pt-4 border-t border-white/10">
         <SentimentBreakdown
           label="Positivas"
           value={totalPositivas}
@@ -189,55 +185,55 @@ export function HistoryAnalytics({ history, playerName }: HistoryAnalyticsProps)
       </div>
 
       {/* Insights */}
-      <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
-        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+      <div className="mt-6 pt-4 border-t border-white/10">
+        <h4 className="text-sm font-medium text-gray-300 mb-3">
           Insights
         </h4>
-        <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+        <ul className="space-y-2 text-sm text-gray-400">
           <li className="flex items-start gap-2">
-            <span className="text-blue-500">•</span>
+            <span className="text-blue-400">•</span>
             <span>
               {playerName} ha tenido un promedio de{" "}
-              <strong>{promedioDiario.toFixed(1)}</strong> menciones diarias
+              <strong className="text-white">{promedioDiario.toFixed(1)}</strong> menciones diarias
             </span>
           </li>
           {Number(sentimentScore) > 20 && (
             <li className="flex items-start gap-2">
-              <span className="text-green-500">•</span>
+              <span className="text-green-400">•</span>
               <span>
-                La cobertura mediática es <strong>mayoritariamente positiva</strong>
+                La cobertura mediática es <strong className="text-green-400">mayoritariamente positiva</strong>
               </span>
             </li>
           )}
           {Number(sentimentScore) < -20 && (
             <li className="flex items-start gap-2">
-              <span className="text-red-500">•</span>
+              <span className="text-red-400">•</span>
               <span>
-                La cobertura mediática es <strong>mayoritariamente negativa</strong>.
+                La cobertura mediática es <strong className="text-red-400">mayoritariamente negativa</strong>.
                 Considerar estrategia de comunicación.
               </span>
             </li>
           )}
           {tendencia === "up" && (
             <li className="flex items-start gap-2">
-              <span className="text-green-500">•</span>
+              <span className="text-green-400">•</span>
               <span>
-                Las menciones están <strong>aumentando</strong> respecto a días anteriores
+                Las menciones están <strong className="text-white">aumentando</strong> respecto a días anteriores
               </span>
             </li>
           )}
           {tendencia === "down" && (
             <li className="flex items-start gap-2">
-              <span className="text-orange-500">•</span>
+              <span className="text-orange-400">•</span>
               <span>
-                Las menciones están <strong>disminuyendo</strong> respecto a días anteriores
+                Las menciones están <strong className="text-white">disminuyendo</strong> respecto a días anteriores
               </span>
             </li>
           )}
           <li className="flex items-start gap-2">
-            <span className="text-purple-500">•</span>
+            <span className="text-purple-400">•</span>
             <span>
-              Mejor día: <strong>{formatDate(bestSentimentDay.fecha)}</strong> con{" "}
+              Mejor día: <strong className="text-white">{formatDate(bestSentimentDay.fecha)}</strong> con{" "}
               {bestSentimentDay.positivas} noticias positivas
             </span>
           </li>
@@ -259,15 +255,15 @@ function KPICard({
   color: "blue" | "green" | "red" | "gray" | "purple";
 }) {
   const colorClasses = {
-    blue: "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300",
-    green: "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300",
-    red: "bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300",
-    gray: "bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300",
-    purple: "bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300",
+    blue: "bg-blue-500/10 border-blue-500/30 text-blue-400",
+    green: "bg-green-500/10 border-green-500/30 text-green-400",
+    red: "bg-red-500/10 border-red-500/30 text-red-400",
+    gray: "bg-gray-500/10 border-gray-500/30 text-gray-400",
+    purple: "bg-purple-500/10 border-purple-500/30 text-purple-400",
   };
 
   return (
-    <div className={`rounded-xl p-4 ${colorClasses[color]}`}>
+    <div className={`rounded-xl p-4 border ${colorClasses[color]}`}>
       <p className="text-xs opacity-80 uppercase tracking-wide">{label}</p>
       <p className="text-2xl font-bold mt-1">{value}</p>
       <p className="text-xs opacity-70 mt-1">{subtext}</p>
@@ -289,28 +285,28 @@ function SentimentBreakdown({
   const percent = total > 0 ? ((value / total) * 100).toFixed(0) : "0";
 
   const colorClasses = {
-    green: "text-green-600 dark:text-green-400",
-    gray: "text-gray-600 dark:text-gray-400",
-    red: "text-red-600 dark:text-red-400",
+    green: "text-green-400",
+    gray: "text-gray-400",
+    red: "text-red-400",
   };
 
   const bgClasses = {
     green: "bg-green-500",
-    gray: "bg-gray-400",
+    gray: "bg-gray-500",
     red: "bg-red-500",
   };
 
   return (
     <div className="text-center">
       <p className={`text-2xl font-bold ${colorClasses[color]}`}>{value}</p>
-      <p className="text-xs text-gray-500 dark:text-gray-400">{label}</p>
-      <div className="mt-2 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+      <p className="text-xs text-gray-500">{label}</p>
+      <div className="mt-2 h-1.5 bg-gray-700 rounded-full overflow-hidden">
         <div
           className={`h-full ${bgClasses[color]} transition-all duration-500`}
           style={{ width: `${percent}%` }}
         />
       </div>
-      <p className="text-xs text-gray-400 mt-1">{percent}%</p>
+      <p className="text-xs text-gray-500 mt-1">{percent}%</p>
     </div>
   );
 }

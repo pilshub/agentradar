@@ -26,58 +26,52 @@ export function DateFilter({
   ];
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-md">
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="text-sm font-medium text-gray-700 dark:text-gray-300 mr-2">
-          Filtrar por fecha:
+    <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4">
+      <div className="flex flex-wrap items-center gap-3">
+        <span className="text-sm text-gray-400 flex items-center gap-2">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          Filtrar:
         </span>
         <div className="flex flex-wrap gap-2">
           {ranges.map((range) => (
             <button
               key={range.value}
               onClick={() => onRangeChange(range.value)}
-              className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+              className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${
                 selectedRange === range.value
-                  ? "bg-blue-600 text-white shadow-md"
-                  : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                  ? "bg-blue-600 text-white"
+                  : "bg-white/10 text-gray-300 hover:bg-white/20"
               }`}
             >
               {range.label}
             </button>
           ))}
         </div>
-      </div>
 
-      {selectedRange === "custom" && onCustomDateChange && (
-        <div className="flex flex-wrap gap-4 mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-          <div className="flex items-center gap-2">
-            <label className="text-sm text-gray-600 dark:text-gray-400">
-              Desde:
-            </label>
+        {selectedRange === "custom" && onCustomDateChange && (
+          <div className="flex items-center gap-2 ml-auto">
             <input
               type="date"
               value={customStart || ""}
               onChange={(e) =>
                 onCustomDateChange(e.target.value, customEnd || "")
               }
-              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm dark:bg-gray-700 dark:text-white"
+              className="px-3 py-1.5 text-sm rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:border-blue-500"
             />
-          </div>
-          <div className="flex items-center gap-2">
-            <label className="text-sm text-gray-600 dark:text-gray-400">
-              Hasta:
-            </label>
+            <span className="text-gray-500">→</span>
             <input
               type="date"
               value={customEnd || ""}
               onChange={(e) =>
                 onCustomDateChange(customStart || "", e.target.value)
               }
-              className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm dark:bg-gray-700 dark:text-white"
+              className="px-3 py-1.5 text-sm rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:border-blue-500"
             />
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
