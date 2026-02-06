@@ -147,13 +147,9 @@ export default function Dashboard() {
             <div className="flex items-center gap-6">
               <div className="relative">
                 <img
-                  src="/api/player-image?id=823631&name=Lukebakio"
+                  src="/players/lukebakio.png"
                   alt={player.name}
                   className="w-28 h-28 rounded-2xl object-cover bg-black/40 ring-2 ring-white/10"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = "https://ui-avatars.com/api/?name=Lukebakio&background=1a1a2e&color=fff&size=200&bold=true";
-                  }}
                 />
                 <span className="absolute -bottom-1.5 -right-1.5 bg-red-600 text-[10px] font-bold px-2.5 py-1 rounded-lg shadow-lg shadow-red-500/30">
                   #{player.number}
