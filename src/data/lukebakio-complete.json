@@ -27,7 +27,7 @@
     "transfermarktId": "331972",
     "transfermarktUrl": "https://www.transfermarkt.es/dodi-lukebakio/profil/spieler/331972",
     "fotmobId": "672498",
-    "photo": "https://images.fotmob.com/image_resources/playerimages/672498.png"
+    "photo": "/api/player-image?id=823631&name=Lukebakio"
   },
   "news": {
     "all": [

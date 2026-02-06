@@ -20,10 +20,10 @@ export interface Mencion {
   fuente: string;
   url: string;
   fecha: string;
-  sentimiento: {
+  sentimiento?: {
     tipo: "positivo" | "negativo" | "neutral";
     score: number;
-  };
+  } | null;
 }
 
 export interface ApiResponse {

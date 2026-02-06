@@ -2,32 +2,75 @@ import { writeFileSync } from "fs";
 import { join } from "path";
 
 const RSS_FEEDS = [
-  // Diarios deportivos
+  // Diarios deportivos generales
   { name: "Marca", url: "https://e00-marca.uecdn.es/rss/portada.xml" },
+  { name: "AS", url: "https://feeds.as.com/mrss-s/pages/as/site/as.com/portada" },
   { name: "El Pais Deportes", url: "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/section/deportes/portada" },
-  // Equipos
+
+  // Equipos - búsquedas generales
   { name: "Sevilla FC News", url: "https://news.google.com/rss/search?q=Sevilla+FC&hl=es&gl=ES&ceid=ES:es" },
   { name: "Real Betis News", url: "https://news.google.com/rss/search?q=Real+Betis&hl=es&gl=ES&ceid=ES:es" },
-  // Jugadores específicos
+
+  // === REAL BETIS - Jugadores ===
   { name: "Isco News", url: "https://news.google.com/rss/search?q=Isco+Betis&hl=es&gl=ES&ceid=ES:es" },
   { name: "Lo Celso News", url: "https://news.google.com/rss/search?q=Lo+Celso+Betis&hl=es&gl=ES&ceid=ES:es" },
+  { name: "Chimy Avila News", url: "https://news.google.com/rss/search?q=Chimy+Avila+Betis&hl=es&gl=ES&ceid=ES:es" },
+  { name: "Abde News", url: "https://news.google.com/rss/search?q=Abde+Ezzalzouli+Betis&hl=es&gl=ES&ceid=ES:es" },
+  { name: "Rui Silva News", url: "https://news.google.com/rss/search?q=Rui+Silva+Betis&hl=es&gl=ES&ceid=ES:es" },
+  { name: "Marc Bartra News", url: "https://news.google.com/rss/search?q=Marc+Bartra+Betis&hl=es&gl=ES&ceid=ES:es" },
+  { name: "William Carvalho News", url: "https://news.google.com/rss/search?q=William+Carvalho+Betis&hl=es&gl=ES&ceid=ES:es" },
+  { name: "Johnny Cardoso News", url: "https://news.google.com/rss/search?q=Johnny+Cardoso+Betis&hl=es&gl=ES&ceid=ES:es" },
+
+  // === SEVILLA FC - Jugadores ===
   { name: "Lukebakio News", url: "https://news.google.com/rss/search?q=Lukebakio+Sevilla&hl=es&gl=ES&ceid=ES:es" },
   { name: "Saul News", url: "https://news.google.com/rss/search?q=Saul+Niguez+Sevilla&hl=es&gl=ES&ceid=ES:es" },
   { name: "Isaac Romero News", url: "https://news.google.com/rss/search?q=Isaac+Romero+Sevilla&hl=es&gl=ES&ceid=ES:es" },
+  { name: "Jesus Navas News", url: "https://news.google.com/rss/search?q=Jesus+Navas+Sevilla&hl=es&gl=ES&ceid=ES:es" },
+  { name: "En-Nesyri News", url: "https://news.google.com/rss/search?q=En-Nesyri+Sevilla&hl=es&gl=ES&ceid=ES:es" },
+  { name: "Gudelj News", url: "https://news.google.com/rss/search?q=Gudelj+Sevilla&hl=es&gl=ES&ceid=ES:es" },
+  { name: "Loic Bade News", url: "https://news.google.com/rss/search?q=Loic+Bade+Sevilla&hl=es&gl=ES&ceid=ES:es" },
+  { name: "Djibril Sow News", url: "https://news.google.com/rss/search?q=Djibril+Sow+Sevilla&hl=es&gl=ES&ceid=ES:es" },
 ];
 
-const JUGADORES = ["Isco", "Lo Celso", "Lukebakio", "Saúl", "Isaac Romero"];
+// All players to track (must match names in players.ts)
+const JUGADORES = [
+  // Betis
+  "Isco", "Lo Celso", "Chimy Ávila", "Abde", "Rui Silva", "Marc Bartra", "William Carvalho", "Johnny Cardoso",
+  // Sevilla
+  "Lukebakio", "Saúl", "Isaac Romero", "Jesús Navas", "En-Nesyri", "Gudelj", "Loïc Badé", "Djibril Sow"
+];
+
+// Alternative name variants for matching
+const NAME_VARIANTS: Record<string, string[]> = {
+  "Chimy Ávila": ["Chimy", "Avila", "Ezequiel Avila"],
+  "Abde": ["Ezzalzouli", "Abdessamad"],
+  "Saúl": ["Saul", "Niguez", "Ñiguez"],
+  "Jesús Navas": ["Jesus Navas", "Navas"],
+  "En-Nesyri": ["Nesyri", "Youssef En-Nesyri", "En Nesyri"],
+  "Loïc Badé": ["Loic Bade", "Bade", "Badé"],
+  "Lo Celso": ["Giovani Lo Celso", "LoCelso"],
+  "Rui Silva": ["Silva"],
+  "Marc Bartra": ["Bartra"],
+  "William Carvalho": ["Carvalho"],
+  "Johnny Cardoso": ["Cardoso"],
+  "Lukebakio": ["Dodi Lukebakio"],
+  "Isaac Romero": ["Romero"],
+  "Gudelj": ["Nemanja Gudelj"],
+  "Djibril Sow": ["Sow"],
+};
 
 const PALABRAS_POSITIVAS = [
   "gol", "victoria", "fichaje", "renovación", "titular", "brillante",
   "estrella", "crack", "líder", "récord", "celebra", "convocado",
-  "asistencia", "hat-trick", "doblete", "mejor", "destacado"
+  "asistencia", "hat-trick", "doblete", "mejor", "destacado", "héroe",
+  "gran partido", "decisivo", "figura", "MVP", "ovación"
 ];
 
 const PALABRAS_NEGATIVAS = [
   "lesión", "lesionado", "sanción", "expulsión", "baja", "suplente",
   "banco", "críticas", "error", "fallo", "derrota", "descartado",
-  "operación", "rotura", "vendido", "salida"
+  "operación", "rotura", "vendido", "salida", "fracaso", "decepción",
+  "sustituido", "enfadado", "conflicto", "multa"
 ];
 
 interface Mencion {
@@ -68,16 +111,7 @@ function analizarSentimiento(texto: string): { tipo: "positivo" | "negativo" | "
   };
 }
 
-function extractText(item: any, field: string): string {
-  const value = item[field];
-  if (!value) return "";
-  if (Array.isArray(value)) return value[0] || "";
-  if (typeof value === "object" && value._) return value._;
-  return String(value);
-}
-
 async function parseXML(xmlText: string): Promise<any[]> {
-  // Simple XML parser for RSS items
   const items: any[] = [];
   const itemRegex = /<item>([\s\S]*?)<\/item>/gi;
   let match;
@@ -129,8 +163,40 @@ async function fetchRSS(feed: { name: string; url: string }): Promise<any[]> {
   }
 }
 
+function matchesPlayer(texto: string, jugador: string): boolean {
+  const textoNorm = normalizar(texto);
+
+  // Check main name
+  if (textoNorm.includes(normalizar(jugador))) return true;
+
+  // Check variants
+  const variants = NAME_VARIANTS[jugador] || [];
+  for (const variant of variants) {
+    if (textoNorm.includes(normalizar(variant))) return true;
+  }
+
+  return false;
+}
+
+function cleanDescription(descripcion: string): string {
+  return descripcion
+    .replace(/<[^>]*?>/g, "")
+    .replace(/<[^>]*$/g, "")
+    .replace(/^[^>]*>/g, "")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#\d+;/g, "")
+    .replace(/https?:\/\/[^\s]+/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 async function main() {
   console.log("\n📡 AgentRadar - Fetch News Script\n");
+  console.log(`Monitorizando ${JUGADORES.length} jugadores`);
   console.log("Descargando RSS feeds...\n");
 
   // Fetch all RSS feeds
@@ -140,29 +206,35 @@ async function main() {
     allArticles.push(...articles);
   }
 
-  console.log(`\nTotal artículos: ${allArticles.length}`);
+  console.log(`\nTotal artículos descargados: ${allArticles.length}`);
+
+  // Filter by last month
+  const oneMonthAgo = new Date();
+  oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+
+  const recentArticles = allArticles.filter(a => {
+    try {
+      const date = new Date(a.pubDate);
+      return date >= oneMonthAgo;
+    } catch {
+      return true; // Include if date parsing fails
+    }
+  });
+
+  console.log(`Artículos del último mes: ${recentArticles.length}`);
   console.log("\nBuscando menciones de jugadores...\n");
 
   // Filter mentions
   const menciones: Mencion[] = [];
 
-  for (const articulo of allArticles) {
+  for (const articulo of recentArticles) {
     const titulo = articulo.title || "";
     const descripcion = articulo.description || "";
-    const textoCompleto = normalizar(titulo + " " + descripcion);
+    const textoCompleto = titulo + " " + descripcion;
 
     for (const jugador of JUGADORES) {
-      if (textoCompleto.includes(normalizar(jugador))) {
-        // Clean HTML from description
-        const cleanDesc = descripcion
-          .replace(/<[^>]*>/g, "")
-          .replace(/&nbsp;/g, " ")
-          .replace(/&amp;/g, "&")
-          .replace(/&lt;/g, "<")
-          .replace(/&gt;/g, ">")
-          .replace(/&quot;/g, '"')
-          .replace(/https?:\/\/[^\s]+/g, "")
-          .trim();
+      if (matchesPlayer(textoCompleto, jugador)) {
+        const cleanDesc = cleanDescription(descripcion);
 
         // Extract real source from title (after " - ")
         const titleParts = titulo.split(" - ");
@@ -171,12 +243,12 @@ async function main() {
 
         menciones.push({
           jugador,
-          titulo: cleanTitle.substring(0, 150),
-          descripcion: cleanDesc.substring(0, 100) || "",
+          titulo: cleanTitle.substring(0, 200),
+          descripcion: cleanDesc.substring(0, 150) || "",
           fuente: realSource.substring(0, 30),
           url: articulo.link,
           fecha: articulo.pubDate,
-          sentimiento: analizarSentimiento(titulo + " " + descripcion),
+          sentimiento: analizarSentimiento(textoCompleto),
         });
       }
     }
@@ -185,17 +257,86 @@ async function main() {
   // Sort by date (newest first)
   menciones.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
 
-  // Group by player (max 20 per player to keep file size small)
+  // Deduplicate by title
+  const seenTitles = new Set<string>();
+  const uniqueMenciones = menciones.filter(m => {
+    const key = m.titulo.toLowerCase().trim();
+    if (seenTitles.has(key)) return false;
+    seenTitles.add(key);
+    return true;
+  });
+
+  console.log(`Deduplicado: ${menciones.length} -> ${uniqueMenciones.length} menciones únicas`);
+
+  // Group by player (max 30 per player for more data)
   const byPlayer: Record<string, Mencion[]> = {};
+  const metrics: Record<string, {
+    totalMenciones: number;
+    positivas: number;
+    negativas: number;
+    neutrales: number;
+    ratio: number;
+    fuentesPrincipales: { fuente: string; count: number }[];
+    keywords: { word: string; count: number }[];
+  }> = {};
+
+  // Keywords to track
+  const KEYWORDS_TO_TRACK = [
+    "gol", "lesión", "fichaje", "titular", "suplente", "convocado",
+    "expulsión", "victoria", "derrota", "entrenamiento", "renovación",
+    "transferencia", "doblete", "asistencia", "hat-trick", "baja",
+    "selección", "derbi", "champions", "europa league", "copa", "penalti"
+  ];
+
   for (const jugador of JUGADORES) {
-    byPlayer[jugador] = menciones
-      .filter((m) => m.jugador === jugador)
-      .slice(0, 20);
+    const playerMenciones = uniqueMenciones.filter((m) => m.jugador === jugador);
+    byPlayer[jugador] = playerMenciones.slice(0, 30);
+
+    // Calculate metrics
+    const positivas = playerMenciones.filter(m => m.sentimiento.tipo === "positivo").length;
+    const negativas = playerMenciones.filter(m => m.sentimiento.tipo === "negativo").length;
+    const neutrales = playerMenciones.filter(m => m.sentimiento.tipo === "neutral").length;
+
+    // Count sources
+    const fuenteCounts: Record<string, number> = {};
+    playerMenciones.forEach(m => {
+      fuenteCounts[m.fuente] = (fuenteCounts[m.fuente] || 0) + 1;
+    });
+    const fuentesPrincipales = Object.entries(fuenteCounts)
+      .map(([fuente, count]) => ({ fuente, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
+
+    // Count keywords
+    const keywordCounts: Record<string, number> = {};
+    playerMenciones.forEach(m => {
+      const texto = (m.titulo + " " + m.descripcion).toLowerCase();
+      KEYWORDS_TO_TRACK.forEach(kw => {
+        if (texto.includes(kw)) {
+          keywordCounts[kw] = (keywordCounts[kw] || 0) + 1;
+        }
+      });
+    });
+    const keywords = Object.entries(keywordCounts)
+      .map(([word, count]) => ({ word, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 8);
+
+    metrics[jugador] = {
+      totalMenciones: playerMenciones.length,
+      positivas,
+      negativas,
+      neutrales,
+      ratio: playerMenciones.length > 0 ? Math.round((positivas / playerMenciones.length) * 100) : 0,
+      fuentesPrincipales,
+      keywords,
+    };
   }
 
-  // Create output (only byPlayer, no duplicated menciones array)
+  // Create output
   const output = {
     byPlayer,
+    metrics,
     timestamp: new Date().toISOString(),
   };
 
@@ -203,16 +344,18 @@ async function main() {
   const outputPath = join(process.cwd(), "src", "data", "noticias.json");
   writeFileSync(outputPath, JSON.stringify(output, null, 2), "utf-8");
 
+  console.log("\n=== RESUMEN ===\n");
   console.log("Menciones encontradas:");
   for (const jugador of JUGADORES) {
     const count = byPlayer[jugador].length;
     const positivas = byPlayer[jugador].filter((m) => m.sentimiento.tipo === "positivo").length;
     const negativas = byPlayer[jugador].filter((m) => m.sentimiento.tipo === "negativo").length;
-    console.log(`  ${jugador}: ${count} (${positivas}+ / ${negativas}-)`);
+    const icon = positivas > negativas ? "🟢" : negativas > positivas ? "🔴" : "⚪";
+    console.log(`  ${icon} ${jugador}: ${count} noticias (${positivas}+ / ${negativas}-)`);
   }
 
   console.log(`\n✅ Datos guardados en: src/data/noticias.json`);
-  console.log(`   Total: ${menciones.length} menciones`);
+  console.log(`   Total: ${uniqueMenciones.length} menciones únicas`);
   console.log(`   Timestamp: ${output.timestamp}\n`);
 }
 

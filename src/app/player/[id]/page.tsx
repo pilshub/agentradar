@@ -89,40 +89,63 @@ export default function PlayerPage() {
   };
 
   const tabs = [
-    { id: "resumen" as Tab, label: "Resumen", icon: "📊" },
-    { id: "noticias" as Tab, label: "Noticias", icon: "📰", count: allNews.length },
-    { id: "social" as Tab, label: "RRSS", icon: "📱" },
-    { id: "calendario" as Tab, label: "Calendario", icon: "📅", count: matches.length },
-    { id: "historial" as Tab, label: "Historial", icon: "📋" },
+    { id: "resumen" as Tab, label: "Resumen", icon: "M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" },
+    { id: "noticias" as Tab, label: "Noticias", icon: "M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z", count: allNews.length },
+    { id: "social" as Tab, label: "RRSS", icon: "M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" },
+    { id: "calendario" as Tab, label: "Calendario", icon: "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z", count: matches.length },
+    { id: "historial" as Tab, label: "Historial", icon: "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" },
   ];
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white">
+    <div className="min-h-screen bg-[#050507] text-white">
       {/* Header */}
-      <header className="border-b border-white/10 bg-gradient-to-r from-red-900/40 via-[#111] to-[#0a0a0a]">
+      <header className="border-b border-white/[0.06] bg-gradient-to-r from-red-900/25 via-[#0c0c10] to-[#050507]">
         <div className="max-w-7xl mx-auto px-4 py-5">
-          <Link href="/" className="text-gray-500 hover:text-white text-sm mb-3 inline-block">← Dashboard</Link>
+          <Link href="/" className="text-gray-500 hover:text-white text-sm mb-4 inline-flex items-center gap-1.5 transition-colors">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Dashboard
+          </Link>
 
-          <div className="flex flex-wrap items-start gap-5">
+          <div className="flex flex-wrap items-start gap-6 mt-2">
             <div className="relative">
-              <img src={player.photo} alt={player.name} className="w-24 h-24 rounded-xl object-cover bg-black/50" />
-              <span className="absolute -bottom-1 -right-1 bg-red-600 text-xs font-bold px-2 py-0.5 rounded">#{player.number}</span>
+              <img
+                src={player.photo}
+                alt={player.name}
+                className="w-28 h-28 rounded-2xl object-cover bg-black/40 ring-2 ring-white/10"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(player.name)}&background=1a1a2e&color=fff&size=200&bold=true`;
+                }}
+              />
+              <span className="absolute -bottom-1.5 -right-1.5 bg-red-600 text-[10px] font-bold px-2.5 py-1 rounded-lg shadow-lg shadow-red-500/30">#{player.number}</span>
             </div>
 
             <div className="flex-1 min-w-[200px]">
-              <h1 className="text-2xl font-bold">{player.fullName}</h1>
-              <p className="text-gray-400 text-sm">{player.team} · {player.position} · {player.nationality}</p>
-              <div className="flex flex-wrap gap-4 mt-2 text-sm">
-                <span>{performance?.international?.flag} {performance?.international?.caps} caps</span>
-                <span>📋 Hasta {contract?.endDate?.split("-")[0]}</span>
-                <span>👔 {contract?.agent?.name}</span>
+              <h1 className="text-3xl font-bold tracking-tight">{player.fullName}</h1>
+              <p className="text-gray-400 text-sm mt-1">{player.team} · {player.position} · {player.nationality}</p>
+              <div className="flex flex-wrap gap-4 mt-3 text-sm">
+                <span className="flex items-center gap-1.5 text-gray-300">{performance?.international?.flag} {performance?.international?.caps} caps</span>
+                <span className="flex items-center gap-1.5 text-gray-300">
+                  <svg className="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  Hasta {contract?.endDate?.split("-")[0]}
+                </span>
+                <span className="flex items-center gap-1.5 text-gray-300">
+                  <svg className="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                  {contract?.agent?.name}
+                </span>
               </div>
             </div>
 
-            <div className="bg-black/40 rounded-xl p-4 text-center">
-              <p className="text-3xl font-bold text-emerald-400">{marketValue?.current?.display}</p>
-              <p className="text-xs text-gray-500">Valor de mercado</p>
-              <p className="text-xs text-gray-600">Peak: {marketValue?.peak?.display}</p>
+            <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-5 text-center backdrop-blur-xl">
+              <p className="text-3xl font-bold text-emerald-400 font-mono">{marketValue?.current?.display}</p>
+              <p className="text-[10px] text-gray-500 uppercase tracking-wider mt-1">Valor de mercado</p>
+              <p className="text-xs text-gray-600 mt-0.5">Peak: {marketValue?.peak?.display}</p>
             </div>
           </div>
         </div>
@@ -130,48 +153,63 @@ export default function PlayerPage() {
 
       {/* Alerts Banner */}
       {(alerts?.newNews > 0 || alerts?.newRumors > 0) && (
-        <div className="bg-gradient-to-r from-blue-900/30 to-purple-900/30 border-b border-blue-500/20">
-          <div className="max-w-7xl mx-auto px-4 py-2 flex items-center gap-4 text-sm">
-            <span className="text-blue-400 font-medium">🔔 HOY:</span>
-            {alerts.newNews > 0 && <span>{alerts.newNews} noticias nuevas</span>}
+        <div className="bg-gradient-to-r from-blue-900/20 to-purple-900/15 border-b border-blue-500/10">
+          <div className="max-w-7xl mx-auto px-4 py-2.5 flex items-center gap-4 text-sm">
+            <span className="text-blue-400 font-semibold flex items-center gap-1.5">
+              <div className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
+              HOY:
+            </span>
+            {alerts.newNews > 0 && <span className="text-gray-300">{alerts.newNews} noticias nuevas</span>}
             {alerts.newRumors > 0 && <span className="text-purple-400">{alerts.newRumors} rumores</span>}
           </div>
         </div>
       )}
 
       {/* Quick Stats */}
-      <div className="border-b border-white/10 bg-[#111]">
+      <div className="border-b border-white/[0.06] bg-[#0c0c10]">
         <div className="max-w-7xl mx-auto px-4 py-3">
           <div className="grid grid-cols-5 md:grid-cols-10 gap-3 text-center text-sm">
-            <div><p className="text-lg font-bold">{performance?.appearances}</p><p className="text-xs text-gray-500">Partidos</p></div>
-            <div><p className="text-lg font-bold text-emerald-400">{performance?.goals}</p><p className="text-xs text-gray-500">Goles</p></div>
-            <div><p className="text-lg font-bold text-blue-400">{performance?.assists}</p><p className="text-xs text-gray-500">Asist</p></div>
-            <div><p className="text-lg font-bold">{performance?.rating}</p><p className="text-xs text-gray-500">Rating</p></div>
-            <div><p className="text-lg font-bold">{stats?.total}</p><p className="text-xs text-gray-500">Noticias</p></div>
-            <div><p className="text-lg font-bold text-purple-400">{stats?.rumores}</p><p className="text-xs text-gray-500">Rumores</p></div>
-            <div><p className="text-lg font-bold">{formatNum(stats?.alcanceTotal || 0)}</p><p className="text-xs text-gray-500">Alcance</p></div>
-            <div><p className="text-lg font-bold">{formatNum(social?.totalReach || 0)}</p><p className="text-xs text-gray-500">Seguidores</p></div>
-            <div><p className="text-lg font-bold">{social?.overallEngagement}%</p><p className="text-xs text-gray-500">Engage</p></div>
-            <div><p className="text-lg font-bold">{injuries?.stats?.currentStatus === "Disponible" ? "✅" : "🔴"}</p><p className="text-xs text-gray-500">Estado</p></div>
+            {[
+              { val: performance?.appearances, label: "Partidos" },
+              { val: performance?.goals, label: "Goles", color: "text-emerald-400" },
+              { val: performance?.assists, label: "Asist", color: "text-blue-400" },
+              { val: performance?.rating, label: "Rating" },
+              { val: stats?.total, label: "Noticias" },
+              { val: stats?.rumores, label: "Rumores", color: "text-purple-400" },
+              { val: formatNum(stats?.alcanceTotal || 0), label: "Alcance" },
+              { val: formatNum(social?.totalReach || 0), label: "Seguidores" },
+              { val: `${social?.overallEngagement}%`, label: "Engage" },
+              { val: injuries?.stats?.currentStatus === "Disponible" ? "✅" : "🔴", label: "Estado" },
+            ].map((s, i) => (
+              <div key={i} className="py-1">
+                <p className={`text-lg font-bold font-mono ${s.color || ""}`}>{s.val}</p>
+                <p className="text-[10px] text-gray-500 uppercase tracking-wider">{s.label}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-white/10 sticky top-0 bg-[#0a0a0a] z-30">
+      <div className="border-b border-white/[0.06] sticky top-0 bg-[#050507]/95 backdrop-blur-xl z-30">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex gap-1 overflow-x-auto">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-4 py-3 text-sm font-medium border-b-2 whitespace-nowrap flex items-center gap-2 ${
-                  activeTab === tab.id ? "border-red-500 text-white" : "border-transparent text-gray-500 hover:text-white"
+                className={`relative px-4 py-3 text-sm font-medium whitespace-nowrap flex items-center gap-2 transition-all duration-200 ${
+                  activeTab === tab.id ? "text-white" : "text-gray-500 hover:text-gray-300"
                 }`}
               >
-                <span>{tab.icon}</span>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={tab.icon} />
+                </svg>
                 {tab.label}
-                {tab.count !== undefined && <span className="text-xs opacity-60">({tab.count})</span>}
+                {tab.count !== undefined && <span className="text-[10px] opacity-60 font-mono">({tab.count})</span>}
+                {activeTab === tab.id && (
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-red-500 to-red-400" />
+                )}
               </button>
             ))}
           </div>
@@ -181,50 +219,50 @@ export default function PlayerPage() {
       <div className="max-w-7xl mx-auto px-4 py-6">
         {/* ========== RESUMEN ========== */}
         {activeTab === "resumen" && (
-          <div className="space-y-6">
-            {/* Media Overview - Nacional vs Internacional */}
+          <div className="space-y-6 animate-in slide-up">
+            {/* Media Overview */}
             <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-[#111] rounded-xl p-5 border border-white/5">
-                <h3 className="font-semibold mb-4 flex items-center gap-2">🇪🇸 Prensa Nacional ({nationalNews.length})</h3>
+              <div className="bg-white/[0.03] backdrop-blur-xl rounded-2xl p-5 border border-white/[0.06] animate-in slide-up stagger-1">
+                <h3 className="font-semibold mb-4 flex items-center gap-2">🇪🇸 Prensa Nacional <span className="text-gray-500 font-normal text-sm">({nationalNews.length})</span></h3>
                 <div className="grid grid-cols-3 gap-3 mb-4">
-                  <div className="bg-emerald-500/10 rounded-lg p-2 text-center">
-                    <p className="text-lg font-bold text-emerald-400">{nationalNews.filter(n => n.sentimiento?.tipo === "positivo").length}</p>
-                    <p className="text-xs text-gray-500">Positivas</p>
+                  <div className="bg-emerald-500/10 border border-emerald-500/10 rounded-xl p-2.5 text-center">
+                    <p className="text-lg font-bold text-emerald-400 font-mono">{nationalNews.filter(n => n.sentimiento?.tipo === "positivo").length}</p>
+                    <p className="text-[10px] text-gray-500 uppercase tracking-wider">Positivas</p>
                   </div>
-                  <div className="bg-gray-500/10 rounded-lg p-2 text-center">
-                    <p className="text-lg font-bold">{nationalNews.filter(n => !n.sentimiento?.tipo || n.sentimiento?.tipo === "neutral").length}</p>
-                    <p className="text-xs text-gray-500">Neutrales</p>
+                  <div className="bg-white/[0.02] border border-white/[0.04] rounded-xl p-2.5 text-center">
+                    <p className="text-lg font-bold font-mono">{nationalNews.filter(n => !n.sentimiento?.tipo || n.sentimiento?.tipo === "neutral").length}</p>
+                    <p className="text-[10px] text-gray-500 uppercase tracking-wider">Neutrales</p>
                   </div>
-                  <div className="bg-red-500/10 rounded-lg p-2 text-center">
-                    <p className="text-lg font-bold text-red-400">{nationalNews.filter(n => n.sentimiento?.tipo === "negativo").length}</p>
-                    <p className="text-xs text-gray-500">Negativas</p>
+                  <div className="bg-red-500/10 border border-red-500/10 rounded-xl p-2.5 text-center">
+                    <p className="text-lg font-bold text-red-400 font-mono">{nationalNews.filter(n => n.sentimiento?.tipo === "negativo").length}</p>
+                    <p className="text-[10px] text-gray-500 uppercase tracking-wider">Negativas</p>
                   </div>
                 </div>
                 <div className="space-y-2">
                   {nationalNews.slice(0, 3).map((n, i) => (
-                    <div key={i} onClick={() => openNews(n)} className="bg-[#0a0a0a] rounded-lg p-2 cursor-pointer hover:bg-[#1a1a1a]">
-                      <p className="text-sm line-clamp-1">{n.titulo}</p>
-                      <p className="text-xs text-gray-500">{n.fuente} · {formatDate(n.fecha)}</p>
+                    <div key={i} onClick={() => openNews(n)} className="bg-white/[0.02] border border-white/[0.04] rounded-xl p-3 cursor-pointer hover:bg-white/[0.06] hover:border-white/[0.12] hover:-translate-y-0.5 transition-all duration-200 group">
+                      <p className="text-sm line-clamp-1 group-hover:text-white transition-colors">{n.titulo}</p>
+                      <p className="text-xs text-gray-500 mt-1">{n.fuente} · {formatDate(n.fecha)}</p>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="bg-[#111] rounded-xl p-5 border border-white/5">
-                <h3 className="font-semibold mb-4 flex items-center gap-2">🌍 Prensa Internacional ({internationalNews.length})</h3>
+              <div className="bg-white/[0.03] backdrop-blur-xl rounded-2xl p-5 border border-white/[0.06] animate-in slide-up stagger-2">
+                <h3 className="font-semibold mb-4 flex items-center gap-2">🌍 Prensa Internacional <span className="text-gray-500 font-normal text-sm">({internationalNews.length})</span></h3>
                 <div className="flex flex-wrap gap-2 mb-4">
                   {Object.entries(stats?.porPais || {}).filter(([p]) => p !== "España" && p !== "España (Sevilla)").slice(0, 6).map(([pais, count]: [string, any]) => (
-                    <span key={pais} className="px-2 py-1 bg-[#1a1a1a] rounded text-xs">{pais}: {count}</span>
+                    <span key={pais} className="px-2.5 py-1 bg-white/[0.03] border border-white/[0.06] rounded-lg text-xs font-mono">{pais}: {count}</span>
                   ))}
                 </div>
                 <div className="space-y-2">
                   {internationalNews.slice(0, 3).map((n, i) => (
-                    <div key={i} onClick={() => openNews(n)} className="bg-[#0a0a0a] rounded-lg p-2 cursor-pointer hover:bg-[#1a1a1a]">
+                    <div key={i} onClick={() => openNews(n)} className="bg-white/[0.02] border border-white/[0.04] rounded-xl p-3 cursor-pointer hover:bg-white/[0.06] hover:border-white/[0.12] hover:-translate-y-0.5 transition-all duration-200 group">
                       <div className="flex items-center gap-2">
                         <span>{langFlag[n.idioma] || "🌐"}</span>
-                        <p className="text-sm line-clamp-1 flex-1">{n.titulo}</p>
+                        <p className="text-sm line-clamp-1 flex-1 group-hover:text-white transition-colors">{n.titulo}</p>
                       </div>
-                      <p className="text-xs text-gray-500">{n.fuente} · {formatDate(n.fecha)}</p>
+                      <p className="text-xs text-gray-500 mt-1">{n.fuente} · {formatDate(n.fecha)}</p>
                     </div>
                   ))}
                 </div>
@@ -232,112 +270,158 @@ export default function PlayerPage() {
             </div>
 
             {/* Market Value Chart */}
-            <div className="bg-[#111] rounded-xl p-5 border border-white/5">
-              <h3 className="font-semibold mb-4">📈 Evolución Valor de Mercado</h3>
+            <div className="bg-white/[0.03] backdrop-blur-xl rounded-2xl p-5 border border-white/[0.06] animate-in slide-up stagger-3">
+              <h3 className="font-semibold mb-4 flex items-center gap-2">
+                <svg className="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+                Evolución Valor de Mercado
+              </h3>
               <div className="h-40 flex items-end gap-1">
                 {marketValue?.history?.map((h: any, i: number) => {
                   const max = Math.max(...marketValue.history.map((x: any) => x.value));
                   const pct = (h.value / max) * 100;
                   const isRecent = i >= marketValue.history.length - 3;
                   return (
-                    <div key={i} className="flex-1 flex flex-col items-center">
-                      <span className="text-[10px] text-gray-500 mb-1">{h.value}M</span>
+                    <div key={i} className="flex-1 flex flex-col items-center group">
+                      <span className="text-[10px] text-gray-600 mb-1 opacity-0 group-hover:opacity-100 transition-opacity font-mono">{h.value}M</span>
                       <div
-                        className={`w-full rounded-t transition-all ${isRecent ? "bg-emerald-500" : "bg-emerald-500/50"}`}
+                        className={`w-full rounded-t transition-all duration-300 group-hover:opacity-80 ${isRecent ? "bg-gradient-to-t from-emerald-500 to-emerald-400" : "bg-gradient-to-t from-emerald-500/50 to-emerald-400/50"}`}
                         style={{ height: `${pct}%`, minHeight: "4px" }}
                       />
-                      <span className="text-[9px] text-gray-600 mt-1">{h.date.split("-")[0].slice(2)}</span>
+                      <span className="text-[9px] text-gray-600 mt-1 font-mono">{h.date.split("-")[0].slice(2)}</span>
                     </div>
                   );
                 })}
               </div>
-              <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-white/5 text-sm">
-                <div><span className="text-gray-500">Actual:</span> <span className="font-bold text-emerald-400">{marketValue?.current?.display}</span></div>
-                <div><span className="text-gray-500">Máximo:</span> <span className="font-bold">{marketValue?.peak?.display}</span></div>
-                <div><span className="text-gray-500">Último traspaso:</span> <span className="font-bold">€10M (2022)</span></div>
+              <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-white/[0.06] text-sm">
+                <div><span className="text-gray-500">Actual:</span> <span className="font-bold text-emerald-400 font-mono">{marketValue?.current?.display}</span></div>
+                <div><span className="text-gray-500">Máximo:</span> <span className="font-bold font-mono">{marketValue?.peak?.display}</span></div>
+                <div><span className="text-gray-500">Último traspaso:</span> <span className="font-bold font-mono">€10M (2022)</span></div>
               </div>
             </div>
 
             {/* Performance + Contract + Injuries Row */}
             <div className="grid md:grid-cols-3 gap-6">
               {/* Performance */}
-              <div className="bg-[#111] rounded-xl p-5 border border-white/5">
-                <h3 className="font-semibold mb-3">⚽ Rendimiento {performance?.season}</h3>
+              <div className="bg-white/[0.03] backdrop-blur-xl rounded-2xl p-5 border border-white/[0.06] animate-in slide-up stagger-4">
+                <h3 className="font-semibold mb-4 flex items-center gap-2">
+                  <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  Rendimiento {performance?.season}
+                </h3>
                 <div className="grid grid-cols-2 gap-2 text-sm">
-                  <div className="flex justify-between"><span className="text-gray-500">Partidos</span><span>{performance?.appearances}</span></div>
-                  <div className="flex justify-between"><span className="text-gray-500">Titular</span><span>{performance?.starts}</span></div>
-                  <div className="flex justify-between"><span className="text-gray-500">Goles</span><span className="text-emerald-400">{performance?.goals}</span></div>
-                  <div className="flex justify-between"><span className="text-gray-500">Asistencias</span><span className="text-blue-400">{performance?.assists}</span></div>
-                  <div className="flex justify-between"><span className="text-gray-500">Minutos</span><span>{performance?.minutesPlayed}'</span></div>
-                  <div className="flex justify-between"><span className="text-gray-500">Rating</span><span>{performance?.rating}</span></div>
+                  {[
+                    { k: "Partidos", v: performance?.appearances },
+                    { k: "Titular", v: performance?.starts },
+                    { k: "Goles", v: performance?.goals, color: "text-emerald-400" },
+                    { k: "Asistencias", v: performance?.assists, color: "text-blue-400" },
+                    { k: "Minutos", v: `${performance?.minutesPlayed}'` },
+                    { k: "Rating", v: performance?.rating },
+                  ].map((row, i) => (
+                    <div key={i} className="flex justify-between py-1 border-b border-white/[0.03]">
+                      <span className="text-gray-500">{row.k}</span>
+                      <span className={`font-mono ${row.color || ""}`}>{row.v}</span>
+                    </div>
+                  ))}
                 </div>
-                <div className="mt-3 pt-3 border-t border-white/5">
-                  <p className="text-xs text-gray-500 mb-2">Forma (últimos 5)</p>
-                  <div className="flex gap-1">
+                <div className="mt-4 pt-3 border-t border-white/[0.06]">
+                  <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-2">Forma (últimos 5)</p>
+                  <div className="flex gap-1.5">
                     {performance?.form?.map((r: string, i: number) => (
-                      <span key={i} className={`w-7 h-7 rounded flex items-center justify-center text-xs font-bold ${r === "W" ? "bg-emerald-500" : r === "D" ? "bg-gray-500" : "bg-red-500"}`}>{r}</span>
+                      <span key={i} className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold transition-transform hover:scale-110 ${r === "W" ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/20" : r === "D" ? "bg-gray-500/20 text-gray-400 border border-gray-500/20" : "bg-red-500/20 text-red-400 border border-red-500/20"}`}>{r}</span>
                     ))}
                   </div>
                 </div>
               </div>
 
               {/* Contract */}
-              <div className="bg-[#111] rounded-xl p-5 border border-white/5">
-                <h3 className="font-semibold mb-3">📋 Contrato</h3>
+              <div className="bg-white/[0.03] backdrop-blur-xl rounded-2xl p-5 border border-white/[0.06] animate-in slide-up stagger-5">
+                <h3 className="font-semibold mb-4 flex items-center gap-2">
+                  <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  Contrato
+                </h3>
                 <div className="space-y-2 text-sm">
-                  <div className="flex justify-between"><span className="text-gray-500">Firmado</span><span>{contract?.signedDate}</span></div>
-                  <div className="flex justify-between"><span className="text-gray-500">Finaliza</span><span className="font-medium">{contract?.endDate}</span></div>
-                  <div className="flex justify-between"><span className="text-gray-500">Años restantes</span><span>{contract?.yearsRemaining?.toFixed(1)}</span></div>
-                  <div className="flex justify-between"><span className="text-gray-500">Salario bruto</span><span>{contract?.salaryGross}</span></div>
-                  <div className="flex justify-between"><span className="text-gray-500">Cláusula</span><span className="text-emerald-400 font-bold">{contract?.releaseClause}</span></div>
+                  {[
+                    { k: "Firmado", v: contract?.signedDate },
+                    { k: "Finaliza", v: contract?.endDate, bold: true },
+                    { k: "Años restantes", v: contract?.yearsRemaining?.toFixed(1) },
+                    { k: "Salario bruto", v: contract?.salaryGross },
+                    { k: "Cláusula", v: contract?.releaseClause, color: "text-emerald-400", bold: true },
+                  ].map((row, i) => (
+                    <div key={i} className="flex justify-between py-1 border-b border-white/[0.03]">
+                      <span className="text-gray-500">{row.k}</span>
+                      <span className={`font-mono ${row.color || ""} ${row.bold ? "font-bold" : ""}`}>{row.v}</span>
+                    </div>
+                  ))}
                 </div>
-                <div className="mt-3 pt-3 border-t border-white/5 text-sm">
+                <div className="mt-4 pt-3 border-t border-white/[0.06] text-sm">
                   <p className="text-gray-500">Agente</p>
-                  <p className="font-medium">{contract?.agent?.name}</p>
+                  <p className="font-medium mt-0.5">{contract?.agent?.name}</p>
                   <p className="text-xs text-gray-500">{contract?.agent?.agency}</p>
                 </div>
               </div>
 
               {/* Injuries Summary */}
-              <div className="bg-[#111] rounded-xl p-5 border border-white/5">
-                <h3 className="font-semibold mb-3">🏥 Lesiones</h3>
-                <div className="flex items-center gap-3 mb-3">
-                  <span className={`text-2xl ${injuries?.stats?.currentStatus === "Disponible" ? "" : "grayscale"}`}>
+              <div className="bg-white/[0.03] backdrop-blur-xl rounded-2xl p-5 border border-white/[0.06] animate-in slide-up stagger-6">
+                <h3 className="font-semibold mb-4 flex items-center gap-2">
+                  <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                  Lesiones
+                </h3>
+                <div className="flex items-center gap-3 mb-4 p-3 bg-white/[0.02] border border-white/[0.04] rounded-xl">
+                  <span className="text-2xl">
                     {injuries?.stats?.currentStatus === "Disponible" ? "✅" : "🔴"}
                   </span>
                   <div>
                     <p className="font-medium">{injuries?.stats?.currentStatus}</p>
-                    <p className="text-xs text-gray-500">Estado actual</p>
+                    <p className="text-[10px] text-gray-500 uppercase tracking-wider">Estado actual</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-2 text-sm">
-                  <div className="flex justify-between"><span className="text-gray-500">Total lesiones</span><span>{injuries?.stats?.totalInjuries}</span></div>
-                  <div className="flex justify-between"><span className="text-gray-500">Días baja total</span><span>{injuries?.stats?.totalDaysOut}</span></div>
-                  <div className="flex justify-between"><span className="text-gray-500">Partidos perdidos</span><span className="text-red-400">{injuries?.stats?.totalGamesMissed}</span></div>
-                  <div className="flex justify-between"><span className="text-gray-500">Recuperación media</span><span>{injuries?.stats?.avgRecoveryDays}d</span></div>
+                  {[
+                    { k: "Total lesiones", v: injuries?.stats?.totalInjuries },
+                    { k: "Días baja total", v: injuries?.stats?.totalDaysOut },
+                    { k: "Partidos perdidos", v: injuries?.stats?.totalGamesMissed, color: "text-red-400" },
+                    { k: "Recuperación media", v: `${injuries?.stats?.avgRecoveryDays}d` },
+                  ].map((row, i) => (
+                    <div key={i} className="flex justify-between py-1 border-b border-white/[0.03]">
+                      <span className="text-gray-500">{row.k}</span>
+                      <span className={`font-mono ${row.color || ""}`}>{row.v}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
 
             {/* Upcoming Matches */}
             {matches.length > 0 && (
-              <div className="bg-[#111] rounded-xl p-5 border border-white/5">
-                <h3 className="font-semibold mb-4">📅 Próximos Partidos</h3>
+              <div className="bg-white/[0.03] backdrop-blur-xl rounded-2xl p-5 border border-white/[0.06] animate-in slide-up stagger-7">
+                <h3 className="font-semibold mb-4 flex items-center gap-2">
+                  <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  Próximos Partidos
+                </h3>
                 <div className="grid md:grid-cols-3 gap-4">
                   {matches.slice(0, 3).map((m: any, i: number) => (
-                    <div key={i} className="bg-[#0a0a0a] rounded-lg p-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs text-gray-500">{m.competition}</span>
-                        <span className={`text-xs px-2 py-0.5 rounded ${m.isHome ? "bg-emerald-500/20 text-emerald-400" : "bg-blue-500/20 text-blue-400"}`}>
+                    <div key={i} className="bg-white/[0.02] border border-white/[0.04] rounded-xl p-4 hover:bg-white/[0.04] transition-all duration-200">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-[10px] text-gray-500 uppercase tracking-wider">{m.competition}</span>
+                        <span className={`text-[10px] px-2 py-0.5 rounded-md font-bold ${m.isHome ? "bg-emerald-500/15 text-emerald-400" : "bg-blue-500/15 text-blue-400"}`}>
                           {m.venue}
                         </span>
                       </div>
-                      <div className="flex items-center justify-between">
-                        <span className={m.isHome ? "font-bold" : ""}>{m.homeTeam}</span>
-                        <span className="text-gray-500">vs</span>
-                        <span className={!m.isHome ? "font-bold" : ""}>{m.awayTeam}</span>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className={m.isHome ? "font-bold" : "text-gray-400"}>{m.homeTeam}</span>
+                        <span className="text-gray-600 text-xs">vs</span>
+                        <span className={!m.isHome ? "font-bold" : "text-gray-400"}>{m.awayTeam}</span>
                       </div>
-                      <p className="text-xs text-gray-500 text-center mt-2">
+                      <p className="text-[11px] text-gray-500 text-center mt-3 font-mono">
                         {new Date(m.date).toLocaleDateString("es-ES", { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
                       </p>
                     </div>
@@ -350,13 +434,13 @@ export default function PlayerPage() {
 
         {/* ========== NOTICIAS ========== */}
         {activeTab === "noticias" && (
-          <div>
+          <div className="animate-in slide-up">
             {/* Filters */}
             <div className="flex flex-wrap gap-3 mb-6">
               <select
                 value={newsFilter.region}
                 onChange={(e) => setNewsFilter({ ...newsFilter, region: e.target.value })}
-                className="bg-[#1a1a1a] border border-white/10 rounded-lg px-3 py-2 text-sm"
+                className="bg-white/[0.03] border border-white/[0.06] rounded-xl px-3 py-2.5 text-sm focus:border-blue-500/50 transition-colors"
               >
                 <option value="all">Todas las regiones</option>
                 {Object.keys(byRegion).map((r) => (
@@ -366,7 +450,7 @@ export default function PlayerPage() {
               <select
                 value={newsFilter.sentiment}
                 onChange={(e) => setNewsFilter({ ...newsFilter, sentiment: e.target.value })}
-                className="bg-[#1a1a1a] border border-white/10 rounded-lg px-3 py-2 text-sm"
+                className="bg-white/[0.03] border border-white/[0.06] rounded-xl px-3 py-2.5 text-sm focus:border-blue-500/50 transition-colors"
               >
                 <option value="all">Todo sentimiento</option>
                 <option value="positivo">Positivas ({stats?.porSentimiento?.positivo})</option>
@@ -381,18 +465,18 @@ export default function PlayerPage() {
                 {Object.entries(byRegion).sort((a, b) => b[1].length - a[1].length).map(([region, news]) => (
                   <div key={region}>
                     <h3 className="font-semibold mb-3 flex items-center gap-2">
-                      {langFlag[news[0]?.idioma] || "🌐"} {regionName[region] || region} ({news.length})
+                      {langFlag[news[0]?.idioma] || "🌐"} {regionName[region] || region} <span className="text-gray-500 font-normal text-sm">({news.length})</span>
                     </h3>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
                       {news.slice(0, 6).map((n: any, i: number) => (
-                        <div key={i} onClick={() => openNews(n)} className="bg-[#111] rounded-lg p-3 border border-white/5 cursor-pointer hover:border-white/20">
+                        <div key={i} onClick={() => openNews(n)} className={`bg-white/[0.03] rounded-xl p-4 border border-white/[0.06] cursor-pointer hover:bg-white/[0.06] hover:border-white/[0.12] hover:-translate-y-0.5 transition-all duration-200 group animate-in slide-up stagger-${Math.min(i + 1, 8)}`}>
                           <div className="flex items-center gap-2 mb-2">
-                            <span className={`w-2 h-2 rounded-full ${n.sentimiento?.tipo === "positivo" ? "bg-emerald-500" : n.sentimiento?.tipo === "negativo" ? "bg-red-500" : "bg-gray-500"}`} />
+                            <span className={`w-2 h-2 rounded-full ${n.sentimiento?.tipo === "positivo" ? "bg-emerald-400" : n.sentimiento?.tipo === "negativo" ? "bg-red-400" : "bg-gray-500"}`} />
                             <span className="text-xs text-gray-500">{n.fuente}</span>
-                            {n.esRumor && <span className="text-xs text-purple-400">Rumor</span>}
+                            {n.esRumor && <span className="text-[10px] text-purple-400 font-medium">Rumor</span>}
                           </div>
-                          <p className="text-sm line-clamp-2">{n.titulo}</p>
-                          <p className="text-xs text-gray-600 mt-1">{formatDate(n.fecha)}</p>
+                          <p className="text-sm line-clamp-2 group-hover:text-white transition-colors">{n.titulo}</p>
+                          <p className="text-[11px] text-gray-600 mt-1.5 font-mono">{formatDate(n.fecha)}</p>
                         </div>
                       ))}
                     </div>
@@ -402,18 +486,18 @@ export default function PlayerPage() {
             ) : (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {filteredNews.map((n: any, i: number) => (
-                  <div key={i} onClick={() => openNews(n)} className="bg-[#111] rounded-lg p-4 border border-white/5 cursor-pointer hover:border-white/20">
+                  <div key={i} onClick={() => openNews(n)} className={`bg-white/[0.03] rounded-xl p-4 border border-white/[0.06] cursor-pointer hover:bg-white/[0.06] hover:border-white/[0.12] hover:-translate-y-0.5 transition-all duration-200 group animate-in slide-up stagger-${Math.min(i + 1, 8)}`}>
                     <div className="flex items-center gap-2 mb-2">
                       <span>{langFlag[n.idioma] || "🌐"}</span>
-                      <span className={`px-2 py-0.5 rounded text-xs ${n.sentimiento?.tipo === "positivo" ? "bg-emerald-500/20 text-emerald-400" : n.sentimiento?.tipo === "negativo" ? "bg-red-500/20 text-red-400" : "bg-gray-500/20 text-gray-400"}`}>
+                      <span className={`px-2 py-0.5 rounded-md text-[10px] font-medium ${n.sentimiento?.tipo === "positivo" ? "bg-emerald-500/15 text-emerald-400" : n.sentimiento?.tipo === "negativo" ? "bg-red-500/15 text-red-400" : "bg-gray-500/15 text-gray-400"}`}>
                         {n.sentimiento?.tipo || "neutral"}
                       </span>
-                      {n.esRumor && <span className="px-2 py-0.5 rounded text-xs bg-purple-500/20 text-purple-400">Rumor</span>}
+                      {n.esRumor && <span className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-purple-500/15 text-purple-400">Rumor</span>}
                     </div>
-                    <p className="font-medium text-sm mb-2 line-clamp-2">{n.titulo}</p>
+                    <p className="font-medium text-sm mb-2 line-clamp-2 group-hover:text-white transition-colors">{n.titulo}</p>
                     <div className="flex justify-between text-xs text-gray-500">
                       <span>{n.fuente}</span>
-                      <span>{formatDate(n.fecha)}</span>
+                      <span className="font-mono">{formatDate(n.fecha)}</span>
                     </div>
                   </div>
                 ))}
@@ -424,18 +508,18 @@ export default function PlayerPage() {
 
         {/* ========== SOCIAL ========== */}
         {activeTab === "social" && (
-          <div className="space-y-6">
+          <div className="space-y-6 animate-in slide-up">
             {/* Social Tabs */}
             <div className="flex gap-2">
               <button
                 onClick={() => setSocialTab("twitter")}
-                className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 ${socialTab === "twitter" ? "bg-blue-500 text-white" : "bg-[#111] text-gray-400"}`}
+                className={`px-5 py-2.5 rounded-xl text-sm font-medium flex items-center gap-2 transition-all duration-200 ${socialTab === "twitter" ? "bg-blue-500 text-white shadow-lg shadow-blue-500/20" : "bg-white/[0.03] border border-white/[0.06] text-gray-400 hover:bg-white/[0.06]"}`}
               >
                 𝕏 Twitter
               </button>
               <button
                 onClick={() => setSocialTab("instagram")}
-                className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 ${socialTab === "instagram" ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white" : "bg-[#111] text-gray-400"}`}
+                className={`px-5 py-2.5 rounded-xl text-sm font-medium flex items-center gap-2 transition-all duration-200 ${socialTab === "instagram" ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/20" : "bg-white/[0.03] border border-white/[0.06] text-gray-400 hover:bg-white/[0.06]"}`}
               >
                 📸 Instagram
               </button>
@@ -443,53 +527,45 @@ export default function PlayerPage() {
 
             {socialTab === "twitter" && (
               <div className="space-y-6">
-                {/* Twitter Stats */}
                 <div className="grid md:grid-cols-4 gap-4">
-                  <div className="bg-[#111] rounded-xl p-4 text-center border border-white/5">
-                    <p className="text-2xl font-bold">{formatNum(social?.twitter?.followers || 0)}</p>
-                    <p className="text-xs text-gray-500">Seguidores</p>
-                  </div>
-                  <div className="bg-[#111] rounded-xl p-4 text-center border border-white/5">
-                    <p className="text-2xl font-bold">{social?.twitter?.tweets}</p>
-                    <p className="text-xs text-gray-500">Tweets</p>
-                  </div>
-                  <div className="bg-[#111] rounded-xl p-4 text-center border border-white/5">
-                    <p className="text-2xl font-bold">{social?.twitter?.recentMentions?.last24h}</p>
-                    <p className="text-xs text-gray-500">Menciones 24h</p>
-                  </div>
-                  <div className="bg-[#111] rounded-xl p-4 text-center border border-white/5">
-                    <p className="text-2xl font-bold">{social?.twitter?.recentMentions?.last7d}</p>
-                    <p className="text-xs text-gray-500">Menciones 7d</p>
-                  </div>
+                  {[
+                    { val: formatNum(social?.twitter?.followers || 0), label: "Seguidores" },
+                    { val: social?.twitter?.tweets, label: "Tweets" },
+                    { val: social?.twitter?.recentMentions?.last24h, label: "Menciones 24h" },
+                    { val: social?.twitter?.recentMentions?.last7d, label: "Menciones 7d" },
+                  ].map((s, i) => (
+                    <div key={i} className="bg-white/[0.03] backdrop-blur-xl rounded-2xl p-4 text-center border border-white/[0.06]">
+                      <p className="text-2xl font-bold font-mono">{s.val}</p>
+                      <p className="text-[10px] text-gray-500 uppercase tracking-wider mt-1">{s.label}</p>
+                    </div>
+                  ))}
                 </div>
 
-                {/* Twitter Sentiment */}
-                <div className="bg-[#111] rounded-xl p-5 border border-white/5">
+                <div className="bg-white/[0.03] backdrop-blur-xl rounded-2xl p-5 border border-white/[0.06]">
                   <h3 className="font-semibold mb-4">Sentimiento de Menciones en Twitter</h3>
-                  <div className="flex gap-1 h-4 rounded-full overflow-hidden mb-3">
-                    <div className="bg-emerald-500" style={{ width: `${social?.twitter?.recentMentions?.sentiment?.positive}%` }} />
-                    <div className="bg-gray-500" style={{ width: `${social?.twitter?.recentMentions?.sentiment?.neutral}%` }} />
-                    <div className="bg-red-500" style={{ width: `${social?.twitter?.recentMentions?.sentiment?.negative}%` }} />
+                  <div className="flex gap-1 h-3 rounded-full overflow-hidden bg-white/[0.03] mb-3">
+                    <div className="bg-gradient-to-r from-emerald-400 to-emerald-500" style={{ width: `${social?.twitter?.recentMentions?.sentiment?.positive}%` }} />
+                    <div className="bg-gray-600" style={{ width: `${social?.twitter?.recentMentions?.sentiment?.neutral}%` }} />
+                    <div className="bg-gradient-to-r from-red-500 to-red-400" style={{ width: `${social?.twitter?.recentMentions?.sentiment?.negative}%` }} />
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-emerald-400">{social?.twitter?.recentMentions?.sentiment?.positive}% positivo</span>
-                    <span className="text-gray-400">{social?.twitter?.recentMentions?.sentiment?.neutral}% neutral</span>
-                    <span className="text-red-400">{social?.twitter?.recentMentions?.sentiment?.negative}% negativo</span>
+                    <span className="flex items-center gap-1.5 text-emerald-400"><span className="w-2 h-2 rounded-full bg-emerald-400" />{social?.twitter?.recentMentions?.sentiment?.positive}% positivo</span>
+                    <span className="flex items-center gap-1.5 text-gray-400"><span className="w-2 h-2 rounded-full bg-gray-500" />{social?.twitter?.recentMentions?.sentiment?.neutral}% neutral</span>
+                    <span className="flex items-center gap-1.5 text-red-400"><span className="w-2 h-2 rounded-full bg-red-400" />{social?.twitter?.recentMentions?.sentiment?.negative}% negativo</span>
                   </div>
                 </div>
 
-                {/* Top Mentions */}
-                <div className="bg-[#111] rounded-xl p-5 border border-white/5">
+                <div className="bg-white/[0.03] backdrop-blur-xl rounded-2xl p-5 border border-white/[0.06]">
                   <h3 className="font-semibold mb-4">Menciones Destacadas</h3>
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {social?.twitter?.topMentions?.map((m: any, i: number) => (
-                      <div key={i} className="bg-[#0a0a0a] rounded-lg p-4">
+                      <div key={i} className="bg-white/[0.02] border border-white/[0.04] rounded-xl p-4 hover:bg-white/[0.04] transition-colors">
                         <div className="flex justify-between mb-2">
                           <span className="text-blue-400 font-medium">{m.user}</span>
-                          <span className="text-xs text-gray-500">{formatDate(m.date)}</span>
+                          <span className="text-xs text-gray-500 font-mono">{formatDate(m.date)}</span>
                         </div>
-                        <p className="text-sm mb-2">{m.text}</p>
-                        <div className="flex gap-4 text-xs text-gray-500">
+                        <p className="text-sm mb-2 leading-relaxed">{m.text}</p>
+                        <div className="flex gap-4 text-xs text-gray-500 font-mono">
                           <span>❤️ {formatNum(m.likes)}</span>
                           <span>🔄 {formatNum(m.retweets)}</span>
                         </div>
@@ -502,53 +578,45 @@ export default function PlayerPage() {
 
             {socialTab === "instagram" && (
               <div className="space-y-6">
-                {/* Instagram Stats */}
                 <div className="grid md:grid-cols-4 gap-4">
-                  <div className="bg-[#111] rounded-xl p-4 text-center border border-white/5">
-                    <p className="text-2xl font-bold">{formatNum(social?.instagram?.followers || 0)}</p>
-                    <p className="text-xs text-gray-500">Seguidores</p>
-                  </div>
-                  <div className="bg-[#111] rounded-xl p-4 text-center border border-white/5">
-                    <p className="text-2xl font-bold">{social?.instagram?.posts}</p>
-                    <p className="text-xs text-gray-500">Posts</p>
-                  </div>
-                  <div className="bg-[#111] rounded-xl p-4 text-center border border-white/5">
-                    <p className="text-2xl font-bold">{formatNum(social?.instagram?.avgLikes || 0)}</p>
-                    <p className="text-xs text-gray-500">Likes/post</p>
-                  </div>
-                  <div className="bg-[#111] rounded-xl p-4 text-center border border-white/5">
-                    <p className="text-2xl font-bold">{social?.instagram?.engagementRate}%</p>
-                    <p className="text-xs text-gray-500">Engagement</p>
-                  </div>
+                  {[
+                    { val: formatNum(social?.instagram?.followers || 0), label: "Seguidores" },
+                    { val: social?.instagram?.posts, label: "Posts" },
+                    { val: formatNum(social?.instagram?.avgLikes || 0), label: "Likes/post" },
+                    { val: `${social?.instagram?.engagementRate}%`, label: "Engagement" },
+                  ].map((s, i) => (
+                    <div key={i} className="bg-white/[0.03] backdrop-blur-xl rounded-2xl p-4 text-center border border-white/[0.06]">
+                      <p className="text-2xl font-bold font-mono">{s.val}</p>
+                      <p className="text-[10px] text-gray-500 uppercase tracking-wider mt-1">{s.label}</p>
+                    </div>
+                  ))}
                 </div>
 
-                {/* Comment Sentiment */}
-                <div className="bg-[#111] rounded-xl p-5 border border-white/5">
+                <div className="bg-white/[0.03] backdrop-blur-xl rounded-2xl p-5 border border-white/[0.06]">
                   <h3 className="font-semibold mb-4">Sentimiento de Comentarios</h3>
-                  <div className="flex gap-1 h-4 rounded-full overflow-hidden mb-3">
-                    <div className="bg-emerald-500" style={{ width: `${social?.instagram?.commentSentiment?.positive}%` }} />
-                    <div className="bg-gray-500" style={{ width: `${social?.instagram?.commentSentiment?.neutral}%` }} />
-                    <div className="bg-red-500" style={{ width: `${social?.instagram?.commentSentiment?.negative}%` }} />
+                  <div className="flex gap-1 h-3 rounded-full overflow-hidden bg-white/[0.03] mb-3">
+                    <div className="bg-gradient-to-r from-emerald-400 to-emerald-500" style={{ width: `${social?.instagram?.commentSentiment?.positive}%` }} />
+                    <div className="bg-gray-600" style={{ width: `${social?.instagram?.commentSentiment?.neutral}%` }} />
+                    <div className="bg-gradient-to-r from-red-500 to-red-400" style={{ width: `${social?.instagram?.commentSentiment?.negative}%` }} />
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-emerald-400">{social?.instagram?.commentSentiment?.positive}% positivo</span>
-                    <span className="text-gray-400">{social?.instagram?.commentSentiment?.neutral}% neutral</span>
-                    <span className="text-red-400">{social?.instagram?.commentSentiment?.negative}% negativo</span>
+                    <span className="flex items-center gap-1.5 text-emerald-400"><span className="w-2 h-2 rounded-full bg-emerald-400" />{social?.instagram?.commentSentiment?.positive}% positivo</span>
+                    <span className="flex items-center gap-1.5 text-gray-400"><span className="w-2 h-2 rounded-full bg-gray-500" />{social?.instagram?.commentSentiment?.neutral}% neutral</span>
+                    <span className="flex items-center gap-1.5 text-red-400"><span className="w-2 h-2 rounded-full bg-red-400" />{social?.instagram?.commentSentiment?.negative}% negativo</span>
                   </div>
                 </div>
 
-                {/* Recent Posts */}
-                <div className="bg-[#111] rounded-xl p-5 border border-white/5">
+                <div className="bg-white/[0.03] backdrop-blur-xl rounded-2xl p-5 border border-white/[0.06]">
                   <h3 className="font-semibold mb-4">Posts Recientes</h3>
                   <div className="grid md:grid-cols-3 gap-4">
                     {social?.instagram?.recentPosts?.map((p: any, i: number) => (
-                      <div key={i} className="bg-[#0a0a0a] rounded-lg p-4">
+                      <div key={i} className="bg-white/[0.02] border border-white/[0.04] rounded-xl p-4 hover:bg-white/[0.04] transition-colors">
                         <div className="flex justify-between mb-2">
-                          <span className="text-xs px-2 py-0.5 bg-[#1a1a1a] rounded">{p.type}</span>
-                          <span className="text-xs text-gray-500">{formatDate(p.date)}</span>
+                          <span className="text-[10px] px-2 py-0.5 bg-white/[0.03] border border-white/[0.06] rounded-md uppercase tracking-wider">{p.type}</span>
+                          <span className="text-xs text-gray-500 font-mono">{formatDate(p.date)}</span>
                         </div>
-                        <p className="text-sm mb-2">{p.caption}</p>
-                        <div className="flex gap-4 text-xs text-gray-500">
+                        <p className="text-sm mb-2 line-clamp-2">{p.caption}</p>
+                        <div className="flex gap-4 text-xs text-gray-500 font-mono">
                           <span>❤️ {formatNum(p.likes)}</span>
                           <span>💬 {p.comments}</span>
                         </div>
@@ -563,28 +631,34 @@ export default function PlayerPage() {
 
         {/* ========== CALENDARIO ========== */}
         {activeTab === "calendario" && (
-          <div className="space-y-6">
-            <div className="bg-[#111] rounded-xl p-5 border border-white/5">
-              <h3 className="font-semibold mb-4">📅 Próximos Partidos de Sevilla FC</h3>
+          <div className="space-y-6 animate-in slide-up">
+            <div className="bg-white/[0.03] backdrop-blur-xl rounded-2xl p-5 border border-white/[0.06]">
+              <h3 className="font-semibold mb-4 flex items-center gap-2">
+                <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Próximos Partidos de Sevilla FC
+              </h3>
               <div className="space-y-3">
                 {matches.map((m: any, i: number) => (
-                  <div key={i} className="bg-[#0a0a0a] rounded-lg p-4 flex items-center gap-4">
+                  <div key={i} className={`bg-white/[0.02] border border-white/[0.04] rounded-xl p-4 flex items-center gap-5 hover:bg-white/[0.04] hover:border-white/[0.08] transition-all duration-200 animate-in slide-up stagger-${Math.min(i + 1, 8)}`}>
                     <div className="text-center min-w-[60px]">
-                      <p className="text-lg font-bold">{new Date(m.date).getDate()}</p>
-                      <p className="text-xs text-gray-500">{new Date(m.date).toLocaleDateString("es-ES", { month: "short" })}</p>
+                      <p className="text-xl font-bold">{new Date(m.date).getDate()}</p>
+                      <p className="text-[10px] text-gray-500 uppercase tracking-wider">{new Date(m.date).toLocaleDateString("es-ES", { month: "short" })}</p>
                     </div>
+                    <div className="w-px h-10 bg-white/[0.06]" />
                     <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <span className={`px-2 py-0.5 rounded text-xs ${m.isHome ? "bg-emerald-500/20 text-emerald-400" : "bg-blue-500/20 text-blue-400"}`}>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${m.isHome ? "bg-emerald-500/15 text-emerald-400" : "bg-blue-500/15 text-blue-400"}`}>
                           {m.venue}
                         </span>
-                        <span className="text-xs text-gray-500">{m.competition}</span>
+                        <span className="text-[10px] text-gray-500 uppercase tracking-wider">{m.competition}</span>
                       </div>
-                      <p className="font-medium mt-1">
+                      <p className="font-medium text-sm">
                         {m.homeTeam} vs {m.awayTeam}
                       </p>
                     </div>
-                    <div className="text-right text-sm text-gray-500">
+                    <div className="text-right text-sm text-gray-500 font-mono">
                       {new Date(m.date).toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })}
                     </div>
                   </div>
@@ -593,13 +667,22 @@ export default function PlayerPage() {
             </div>
 
             {/* National Team */}
-            <div className="bg-[#111] rounded-xl p-5 border border-white/5">
-              <h3 className="font-semibold mb-4">{performance?.international?.flag} Selección de {performance?.international?.country}</h3>
+            <div className="bg-white/[0.03] backdrop-blur-xl rounded-2xl p-5 border border-white/[0.06]">
+              <h3 className="font-semibold mb-4 flex items-center gap-2">
+                {performance?.international?.flag} Selección de {performance?.international?.country}
+              </h3>
               <div className="grid grid-cols-4 gap-4 text-center">
-                <div><p className="text-xl font-bold">{performance?.international?.caps}</p><p className="text-xs text-gray-500">Partidos</p></div>
-                <div><p className="text-xl font-bold">{performance?.international?.goals}</p><p className="text-xs text-gray-500">Goles</p></div>
-                <div><p className="text-xl font-bold">{performance?.international?.assists}</p><p className="text-xs text-gray-500">Asistencias</p></div>
-                <div><p className="text-sm font-medium">{performance?.international?.lastCallUp}</p><p className="text-xs text-gray-500">Última convocatoria</p></div>
+                {[
+                  { val: performance?.international?.caps, label: "Partidos" },
+                  { val: performance?.international?.goals, label: "Goles", color: "text-emerald-400" },
+                  { val: performance?.international?.assists, label: "Asistencias", color: "text-blue-400" },
+                  { val: performance?.international?.lastCallUp, label: "Última convocatoria", small: true },
+                ].map((s, i) => (
+                  <div key={i} className="bg-white/[0.02] border border-white/[0.04] rounded-xl p-3">
+                    <p className={`${s.small ? "text-sm" : "text-xl"} font-bold font-mono ${s.color || ""}`}>{s.val}</p>
+                    <p className="text-[10px] text-gray-500 uppercase tracking-wider mt-1">{s.label}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -607,23 +690,28 @@ export default function PlayerPage() {
 
         {/* ========== HISTORIAL ========== */}
         {activeTab === "historial" && (
-          <div className="space-y-6">
+          <div className="space-y-6 animate-in slide-up">
             {/* Injury History */}
-            <div className="bg-[#111] rounded-xl p-5 border border-white/5">
-              <h3 className="font-semibold mb-4">🏥 Historial Completo de Lesiones</h3>
+            <div className="bg-white/[0.03] backdrop-blur-xl rounded-2xl p-5 border border-white/[0.06]">
+              <h3 className="font-semibold mb-4 flex items-center gap-2">
+                <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+                Historial Completo de Lesiones
+              </h3>
               <div className="space-y-3">
                 {injuries?.list?.map((inj: any) => (
-                  <div key={inj.id} className="bg-[#0a0a0a] rounded-lg p-4 flex items-start gap-4">
-                    <div className={`w-3 h-3 rounded-full mt-1 ${inj.severity === "Leve" ? "bg-yellow-500" : inj.severity === "Moderada" ? "bg-orange-500" : "bg-red-500"}`} />
+                  <div key={inj.id} className="bg-white/[0.02] border border-white/[0.04] rounded-xl p-4 flex items-start gap-4 hover:bg-white/[0.04] transition-colors">
+                    <div className={`w-3 h-3 rounded-full mt-1 flex-shrink-0 ${inj.severity === "Leve" ? "bg-yellow-500 shadow-lg shadow-yellow-500/20" : inj.severity === "Moderada" ? "bg-orange-500 shadow-lg shadow-orange-500/20" : "bg-red-500 shadow-lg shadow-red-500/20"}`} />
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
                         <p className="font-medium">{inj.type}</p>
-                        <span className={`text-xs px-2 py-0.5 rounded ${inj.status === "Recuperado" ? "bg-emerald-500/20 text-emerald-400" : "bg-red-500/20 text-red-400"}`}>
+                        <span className={`text-[10px] px-2 py-0.5 rounded-md font-medium ${inj.status === "Recuperado" ? "bg-emerald-500/15 text-emerald-400" : "bg-red-500/15 text-red-400"}`}>
                           {inj.status}
                         </span>
                       </div>
                       <p className="text-sm text-gray-400">{inj.area}</p>
-                      <div className="flex gap-4 mt-2 text-xs text-gray-500">
+                      <div className="flex gap-4 mt-2 text-xs text-gray-500 font-mono">
                         <span>📅 {inj.startDate} → {inj.endDate}</span>
                         <span>⏱️ {inj.days} días</span>
                         <span>❌ {inj.missedGames} partidos</span>
@@ -635,45 +723,56 @@ export default function PlayerPage() {
             </div>
 
             {/* Transfer History */}
-            <div className="bg-[#111] rounded-xl p-5 border border-white/5">
-              <h3 className="font-semibold mb-4">💰 Historial de Traspasos</h3>
+            <div className="bg-white/[0.03] backdrop-blur-xl rounded-2xl p-5 border border-white/[0.06]">
+              <h3 className="font-semibold mb-4 flex items-center gap-2">
+                <svg className="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                </svg>
+                Historial de Traspasos
+              </h3>
               <div className="space-y-3">
                 {marketValue?.transferHistory?.map((t: any, i: number) => (
-                  <div key={i} className="bg-[#0a0a0a] rounded-lg p-4 flex items-center gap-4">
-                    <span className="text-sm font-medium min-w-[60px]">{t.date}</span>
+                  <div key={i} className="bg-white/[0.02] border border-white/[0.04] rounded-xl p-4 flex items-center gap-4 relative overflow-hidden">
+                    <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-gradient-to-b from-purple-500 to-purple-400" />
+                    <span className="text-sm font-mono min-w-[60px] pl-3 text-gray-500">{t.date}</span>
                     <div className="flex-1">
-                      <p>{t.from} → {t.to}</p>
+                      <p><span className="text-gray-400">{t.from}</span> <span className="text-gray-600 mx-1">→</span> <span className="text-white font-medium">{t.to}</span></p>
                     </div>
-                    <span className={`font-bold ${t.type === "loan" ? "text-blue-400" : "text-emerald-400"}`}>{t.fee}</span>
+                    <span className={`font-bold font-mono ${t.type === "loan" ? "text-blue-400" : "text-emerald-400"}`}>{t.fee}</span>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Season History */}
-            <div className="bg-[#111] rounded-xl p-5 border border-white/5">
-              <h3 className="font-semibold mb-4">📊 Estadísticas por Temporada</h3>
+            <div className="bg-white/[0.03] backdrop-blur-xl rounded-2xl p-5 border border-white/[0.06]">
+              <h3 className="font-semibold mb-4 flex items-center gap-2">
+                <svg className="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                Estadísticas por Temporada
+              </h3>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="text-left text-gray-500 border-b border-white/10">
-                      <th className="pb-2">Temporada</th>
-                      <th className="pb-2">Equipo</th>
-                      <th className="pb-2 text-center">PJ</th>
-                      <th className="pb-2 text-center">Goles</th>
-                      <th className="pb-2 text-center">Asist</th>
-                      <th className="pb-2 text-center">Rating</th>
+                    <tr className="text-left text-gray-500 border-b border-white/[0.06]">
+                      <th className="pb-3 text-[11px] uppercase tracking-wider font-medium">Temporada</th>
+                      <th className="pb-3 text-[11px] uppercase tracking-wider font-medium">Equipo</th>
+                      <th className="pb-3 text-center text-[11px] uppercase tracking-wider font-medium">PJ</th>
+                      <th className="pb-3 text-center text-[11px] uppercase tracking-wider font-medium">Goles</th>
+                      <th className="pb-3 text-center text-[11px] uppercase tracking-wider font-medium">Asist</th>
+                      <th className="pb-3 text-center text-[11px] uppercase tracking-wider font-medium">Rating</th>
                     </tr>
                   </thead>
                   <tbody>
                     {performance?.seasonHistory?.map((s: any, i: number) => (
-                      <tr key={i} className="border-b border-white/5">
-                        <td className="py-2">{s.season}</td>
-                        <td className="py-2">{s.team}</td>
-                        <td className="py-2 text-center">{s.apps}</td>
-                        <td className="py-2 text-center text-emerald-400">{s.goals}</td>
-                        <td className="py-2 text-center text-blue-400">{s.assists}</td>
-                        <td className="py-2 text-center">{s.rating}</td>
+                      <tr key={i} className="border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors">
+                        <td className="py-3 font-mono">{s.season}</td>
+                        <td className="py-3">{s.team}</td>
+                        <td className="py-3 text-center font-mono">{s.apps}</td>
+                        <td className="py-3 text-center font-mono text-emerald-400">{s.goals}</td>
+                        <td className="py-3 text-center font-mono text-blue-400">{s.assists}</td>
+                        <td className="py-3 text-center font-mono">{s.rating}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -686,41 +785,52 @@ export default function PlayerPage() {
 
       {/* News Modal */}
       {selectedNews && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => { setSelectedNews(null); setAiAnalysis(null); }}>
-          <div className="bg-[#111] rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-white/10" onClick={(e) => e.stopPropagation()}>
-            <div className="p-5 space-y-4">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-in fade-in" onClick={() => { setSelectedNews(null); setAiAnalysis(null); }}>
+          <div className="bg-[#0c0c10] rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-white/[0.08] shadow-2xl animate-in zoom-in-95" onClick={(e) => e.stopPropagation()}>
+            <div className="p-6 space-y-5">
               <div className="flex items-center gap-2 mb-2">
                 <span>{langFlag[selectedNews.idioma] || "🌐"}</span>
-                <span className={`px-2 py-0.5 rounded text-xs ${selectedNews.sentimiento?.tipo === "positivo" ? "bg-emerald-500/20 text-emerald-400" : selectedNews.sentimiento?.tipo === "negativo" ? "bg-red-500/20 text-red-400" : "bg-gray-500/20 text-gray-400"}`}>
+                <span className={`px-2 py-0.5 rounded-md text-[10px] font-medium ${selectedNews.sentimiento?.tipo === "positivo" ? "bg-emerald-500/15 text-emerald-400" : selectedNews.sentimiento?.tipo === "negativo" ? "bg-red-500/15 text-red-400" : "bg-gray-500/15 text-gray-400"}`}>
                   {selectedNews.sentimiento?.tipo?.toUpperCase() || "NEUTRAL"}
                 </span>
-                {selectedNews.esRumor && <span className="px-2 py-0.5 rounded text-xs bg-purple-500/20 text-purple-400">RUMOR</span>}
+                {selectedNews.esRumor && <span className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-purple-500/15 text-purple-400">RUMOR</span>}
+                <button onClick={() => { setSelectedNews(null); setAiAnalysis(null); }} className="ml-auto p-2 hover:bg-white/[0.06] rounded-xl transition-colors">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
               </div>
-              <h2 className="text-lg font-bold">{selectedNews.titulo}</h2>
+              <h2 className="text-lg font-bold leading-snug">{selectedNews.titulo}</h2>
               <div className="flex items-center gap-2 text-sm text-gray-500">
-                <span className="px-2 py-0.5 bg-[#1a1a1a] rounded">{selectedNews.fuente}</span>
-                <span>{formatDate(selectedNews.fecha)}</span>
+                <span className="px-2.5 py-1 bg-white/[0.03] border border-white/[0.06] rounded-lg text-xs font-medium">{selectedNews.fuente}</span>
+                <span className="text-xs font-mono">{formatDate(selectedNews.fecha)}</span>
                 <span>·</span>
                 <span>{selectedNews.pais}</span>
               </div>
 
-              <div className="bg-gradient-to-r from-blue-900/30 to-purple-900/30 rounded-xl p-4 border border-blue-500/30">
-                <h4 className="font-medium mb-2">🤖 Análisis con IA</h4>
+              <div className="relative bg-gradient-to-br from-blue-900/20 via-purple-900/15 to-cyan-900/10 rounded-2xl p-5 border border-blue-500/20 overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500 animate-gradient" />
+                <h4 className="font-medium mb-3 flex items-center gap-2">
+                  <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  </svg>
+                  Análisis con IA
+                </h4>
                 {loadingAi ? (
-                  <div className="flex items-center gap-2 text-gray-400">
-                    <div className="animate-spin w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full" />
-                    Analizando...
+                  <div className="flex items-center gap-3 text-gray-400">
+                    <div className="w-5 h-5 border-2 border-blue-400 border-t-transparent rounded-full animate-spin" />
+                    <span className="text-sm">Analizando...</span>
                   </div>
                 ) : (
-                  <p className="text-sm text-gray-300">{aiAnalysis}</p>
+                  <p className="text-sm text-gray-300 leading-relaxed">{aiAnalysis}</p>
                 )}
               </div>
 
-              <div className="flex gap-3 pt-4 border-t border-white/10">
-                <a href={selectedNews.url} target="_blank" rel="noopener noreferrer" className="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-medium text-center">
-                  Leer completa →
+              <div className="flex gap-3 pt-4 border-t border-white/[0.06]">
+                <a href={selectedNews.url} target="_blank" rel="noopener noreferrer" className="flex-1 py-3 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-xl text-sm font-semibold text-center transition-all duration-200 shadow-lg shadow-blue-500/20">
+                  Leer completa
                 </a>
-                <button onClick={() => { setSelectedNews(null); setAiAnalysis(null); }} className="px-5 py-2.5 bg-white/5 hover:bg-white/10 rounded-xl text-sm font-medium">
+                <button onClick={() => { setSelectedNews(null); setAiAnalysis(null); }} className="px-6 py-3 bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.06] hover:border-white/[0.12] rounded-xl text-sm font-medium transition-all duration-200">
                   Cerrar
                 </button>
               </div>
